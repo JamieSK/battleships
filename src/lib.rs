@@ -11,4 +11,8 @@ impl Battleships {
     pub fn ships_board(&self, _player: usize) -> Vec<Vec<Option<Cell>>> {
         vec![vec![None; 10]; 10]
     }
+
+    pub fn shots_board(&self, _player: usize) -> Vec<Vec<Option<Cell>>> {
+        vec![vec![None; 10]; 10]
+    }
 }
