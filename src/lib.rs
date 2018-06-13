@@ -13,18 +13,18 @@ impl Battleships {
     }
 
     pub fn ships_board(&self, _player: usize) -> Vec<Vec<Cell>> {
-        vec![vec![Cell::new(None); 10]; 10]
+        vec![vec![Cell::new(None, false); 10]; 10]
     }
 
     pub fn shots_board(&self, _player: usize) -> Vec<Vec<Cell>> {
-        vec![vec![Cell::new(None); 10]; 10]
+        vec![vec![Cell::new(None, false); 10]; 10]
     }
 
     pub fn place_ship(&mut self, _player: usize, _cells: Vec<Point>) {}
 }
 
 impl Cell {
-    pub fn new(_contents: Option<Ship>) -> Cell {
+    pub fn new(_contents: Option<Ship>, _hit: bool) -> Cell {
         Cell {}
     }
 }
