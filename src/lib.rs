@@ -65,7 +65,11 @@ impl Battleships {
     }
 
     pub fn fire_at(&mut self, point: Point, _player: usize) -> Result<&str, &str> {
-        self.player_2.ships_board[point.x][point.y].hit = true;
-        Ok("Miss.")
+        let cell = &mut self.player_1.ships_board[point.x][point.y];
+        cell.hit = true;
+        match cell.contents {
+            Some(_) => Ok("Hit!"),
+            None => Ok("Miss."),
+        }
     }
 }
