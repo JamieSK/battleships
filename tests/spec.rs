@@ -36,3 +36,11 @@ fn can_hit_empty_cell() {
     game.fire_at(Point { x: 1, y: 1 }, 1);
     assert_eq!(game.ships_board(2)[1][1], Cell { contents: None, hit: true });
 }
+
+#[test]
+fn can_hit_cell_with_ship() {
+    let mut game = Battleships::new();
+    game.place_ship(1, vec![Point { x: 1, y: 1 }]);
+    game.fire_at(Point { x: 1, y: 1 }, 1);
+    assert_eq!(game.ships_board(2)[1][1], Cell { contents: None, hit: true });
+}
