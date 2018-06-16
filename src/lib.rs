@@ -1,42 +1,70 @@
-pub struct Battleships {}
+pub struct Battleships {
+    player_1: Board,
+    player_2: Board,
+}
+
+struct Board {
+    ships_board: Vec<Vec<Cell>>,
+    shots_board: Vec<Vec<Cell>>,
+}
 
 #[derive(Clone, PartialEq, Debug)]
-pub struct Cell {}
+pub struct Cell {
+    pub contents: Option<Ship>,
+    pub hit: bool,
+}
 
-pub struct Point {}
+#[derive(Clone, PartialEq, Debug)]
+pub struct Point {
+    pub x: usize,
+    pub y: usize,
+}
 
-pub struct Ship {}
+#[derive(Clone, PartialEq, Debug)]
+pub struct Ship {
+    pub cells: Vec<Point>,
+}
 
 impl Battleships {
     pub fn new() -> Battleships {
-        Battleships {}
+        Battleships {
+            player_1: Board {
+                ships_board: vec![vec![Cell { contents: None, hit: false }; 10]; 10],
+                shots_board: vec![vec![Cell { contents: None, hit: false }; 10]; 10],
+            },
+            player_2: Board {
+                ships_board: vec![vec![Cell { contents: None, hit: false }; 10]; 10],
+                shots_board: vec![vec![Cell { contents: None, hit: false }; 10]; 10],
+            },
+        }
     }
 
-    pub fn ships_board(&self, _player: usize) -> Vec<Vec<Cell>> {
-        vec![vec![Cell::new(None, false); 10]; 10]
+    pub fn ships_board(&self, player: usize) -> Vec<Vec<Cell>> {
+        match player {
+            1 => self.player_1.ships_board.clone(),
+            2 => self.player_2.ships_board.clone(),
+            _ => panic!(),
+        }
     }
 
-    pub fn shots_board(&self, _player: usize) -> Vec<Vec<Cell>> {
-        vec![vec![Cell::new(None, false); 10]; 10]
+    pub fn shots_board(&self, player: usize) -> Vec<Vec<Cell>> {
+        match player {
+            1 => self.player_1.shots_board.clone(),
+            2 => self.player_2.shots_board.clone(),
+            _ => panic!(),
+        }
     }
 
-    pub fn place_ship(&mut self, _player: usize, _cells: Vec<Point>) {}
-}
-
-impl Cell {
-    pub fn new(_contents: Option<Ship>, _hit: bool) -> Cell {
-        Cell {}
+    pub fn place_ship(&mut self, _player: usize, cells: Vec<Point>) {
+        for cell in cells.clone() {
+            self.player_1.ships_board[cell.x][cell.y] = Cell {
+                contents: Some(Ship { cells: cells.clone() }),
+                hit: false,
+            }
+        }
     }
-}
 
-impl Point {
-    pub fn new(_x: usize, _y:usize) -> Point {
-        Point {}
-    }
-}
-
-impl Ship {
-    pub fn new(_cells: Vec<Point>) -> Ship {
-        Ship {}
+    pub fn fire_at(&mut self, point: Point, _player: usize) {
+        self.player_2.ships_board[point.x][point.y].hit = true;
     }
 }
