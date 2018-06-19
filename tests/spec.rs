@@ -57,3 +57,11 @@ fn return_hit_when_hit_a_ship() {
     game.place_ship(1, vec![Point { x: 1, y: 1 }, Point { x: 1, y: 2 }]);
     assert_eq!(game.fire_at(Point { x: 1, y: 1 }, 2), Ok("Hit!"));
 }
+
+#[test]
+fn return_sunk_my_battleship_when_all_of_ship_has_been_hit() {
+    let mut game = Battleships::new();
+    game.place_ship(1, vec![Point { x: 1, y: 1 }, Point { x: 1, y: 2 }]);
+    game.fire_at(Point { x: 1, y: 1 }, 2).unwrap();
+    assert_eq!(game.fire_at(Point { x: 1, y: 2 }, 2), Ok("You sank my battleship!"));
+}
