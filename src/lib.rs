@@ -5,6 +5,7 @@ pub struct Battleships {
 
 struct Board {
     ships_board: Vec<Vec<Cell>>,
+    ships_left: u8,
     shots_board: Vec<Vec<Cell>>,
 }
 
@@ -30,10 +31,12 @@ impl Battleships {
         Battleships {
             player_1: Board {
                 ships_board: vec![vec![Cell { contents: None, hit: false }; 10]; 10],
+                ships_left: 0,
                 shots_board: vec![vec![Cell { contents: None, hit: false }; 10]; 10],
             },
             player_2: Board {
                 ships_board: vec![vec![Cell { contents: None, hit: false }; 10]; 10],
+                ships_left: 0,
                 shots_board: vec![vec![Cell { contents: None, hit: false }; 10]; 10],
             },
         }
@@ -64,6 +67,7 @@ impl Battleships {
                         hit: false,
                     }
                 }
+                self.player_1.ships_left += 1;
             }
             2 => {
                 for cell in cells.clone() {
@@ -72,6 +76,7 @@ impl Battleships {
                         hit: false,
                     }
                 }
+                self.player_2.ships_left += 1;
             }
             _ => panic!(),
         }
@@ -83,7 +88,13 @@ impl Battleships {
         match cell.contents {
             Some(ref ship) => {
                 match self.sunk_ship(ship, 1) {
-                    true => Ok("You sank my battleship!"),
+                    true => {
+                        self.player_1.ships_left -= 1;
+                        match self.player_1.ships_left {
+                            0 => Ok("You sank all my battleships!"),
+                            _ => Ok("You sank my battleship!"),
+                        }
+                    },
                     false => Ok("Hit!"),
                 }
             }
