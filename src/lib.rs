@@ -55,12 +55,25 @@ impl Battleships {
         }
     }
 
-    pub fn place_ship(&mut self, _player: usize, cells: Vec<Point>) {
-        for cell in cells.clone() {
-            self.player_1.ships_board[cell.x][cell.y] = Cell {
-                contents: Some(Ship { cells: cells.clone() }),
-                hit: false,
+    pub fn place_ship(&mut self, player: usize, cells: Vec<Point>) {
+        match player {
+            1 => {
+                for cell in cells.clone() {
+                    self.player_1.ships_board[cell.x][cell.y] = Cell {
+                        contents: Some(Ship { cells: cells.clone() }),
+                        hit: false,
+                    }
+                }
             }
+            2 => {
+                for cell in cells.clone() {
+                    self.player_2.ships_board[cell.x][cell.y] = Cell {
+                        contents: Some(Ship { cells: cells.clone() }),
+                        hit: false,
+                    }
+                }
+            }
+            _ => panic!(),
         }
     }
 
@@ -73,7 +86,7 @@ impl Battleships {
                     true => Ok("You sank my battleship!"),
                     false => Ok("Hit!"),
                 }
-            },
+            }
             None => Ok("Miss."),
         }
     }

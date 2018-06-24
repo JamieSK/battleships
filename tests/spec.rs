@@ -65,3 +65,13 @@ fn return_sunk_my_battleship_when_all_of_ship_has_been_hit() {
     game.fire_at(Point { x: 1, y: 1 }, 2).unwrap();
     assert_eq!(game.fire_at(Point { x: 1, y: 2 }, 2), Ok("You sank my battleship!"));
 }
+
+#[test]
+fn hitting_one_players_ship_does_not_affect_the_others() {
+    let mut game = Battleships::new();
+    game.place_ship(1, vec![Point { x: 1, y: 1 }, Point { x: 1, y: 2 }]);
+    game.place_ship(2, vec![Point { x: 1, y: 1 }, Point { x: 1, y: 2 }]);
+    game.fire_at(Point { x: 1, y: 1 }, 2).unwrap();
+    assert_eq!(game.ships_board(2)[1][1],
+               Cell { contents: Some(Ship { cells: vec![Point { x: 1, y: 1 }, Point { x: 1, y: 2 }] }), hit: false })
+}
