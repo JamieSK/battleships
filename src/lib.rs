@@ -58,6 +58,14 @@ impl Battleships {
         }
     }
 
+    fn ships_left(&mut self, player: usize) -> &mut u8 {
+        match player {
+            1 => &mut self.player_1.ships_left,
+            2 => &mut self.player_2.ships_left,
+            _ => panic!(),
+        }
+    }
+
     pub fn place_ship(&mut self, player: usize, cells: Vec<Point>) {
         match player {
             1 => {
@@ -82,15 +90,21 @@ impl Battleships {
         }
     }
 
-    pub fn fire_at(&mut self, point: Point, _player: usize) -> Result<&str, &str> {
-        self.player_1.ships_board[point.x][point.y].hit = true;
-        let cell = &self.player_1.ships_board[point.x][point.y];
+    pub fn fire_at(&mut self, point: Point, player: usize) -> Result<&str, &str> {
+        let other_player = match player {
+            1 => 2,
+            2 => 1,
+            _ => panic!(),
+        };
+        self.hit_cell(&point, other_player);
+        let cell = self.get_cell(point, other_player);
         match cell.contents {
             Some(ref ship) => {
-                match self.sunk_ship(ship, 1) {
+                match self.sunk_ship(ship, other_player) {
                     true => {
-                        self.player_1.ships_left -= 1;
-                        match self.player_1.ships_left {
+                        let mut ships_left = self.ships_left(other_player);
+                        *ships_left -= 1;
+                        match *ships_left {
                             0 => Ok("You sank all my battleships!"),
                             _ => Ok("You sank my battleship!"),
                         }
@@ -102,15 +116,29 @@ impl Battleships {
         }
     }
 
+    fn hit_cell(&mut self, point: &Point, player: usize) {
+        match player {
+            1 => self.player_1.ships_board[point.x][point.y].hit = true,
+            2 => self.player_2.ships_board[point.x][point.y].hit = true,
+            _ => panic!(),
+        }
+    }
+
+    fn get_cell(&self, point: Point, player: usize) -> Cell {
+        match player {
+            1 => self.player_1.ships_board[point.x][point.y].clone(),
+            2 => self.player_2.ships_board[point.x][point.y].clone(),
+            _ => panic!(),
+        }
+    }
+
     fn sunk_ship(&self, ship: &Ship, player: usize) -> bool {
-        let mut sunk = true;
         let ships_board = self.ships_board(player);
         for point in &ship.cells {
             if !ships_board[point.x][point.y].hit {
-                sunk = false;
-                break;
+                return false;
             }
         }
-        sunk
+        true
     }
 }

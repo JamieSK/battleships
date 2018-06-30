@@ -59,7 +59,7 @@ fn return_hit_when_hit_a_ship() {
 }
 
 #[test]
-fn return_sunk_my_battleship_when_all_of_ship_has_been_hit() {
+fn return_sank_my_battleship_when_all_of_ship_has_been_hit() {
     let mut game = Battleships::new();
     game.place_ship(1, vec![Point { x: 1, y: 1 }, Point { x: 1, y: 2 }]);
     game.place_ship(1, vec![Point { x: 4, y: 4 }]);
@@ -83,4 +83,12 @@ fn return_sank_all_my_battleships_when_last_one_is_sunk() {
     game.place_ship(1, vec![Point { x: 1, y: 1 }, Point { x: 1, y: 2 }]);
     game.fire_at(Point { x: 1, y: 1 }, 2).unwrap();
     assert_eq!(game.fire_at(Point { x: 1, y: 2 }, 2), Ok("You sank all my battleships!"));
+}
+
+#[test]
+fn can_sink_player_twos_battleships() {
+    let mut game = Battleships::new();
+    game.place_ship(2, vec![Point { x: 1, y: 1 }, Point { x: 1, y: 2 }]);
+    game.fire_at(Point { x: 1, y: 1 }, 1).unwrap();
+    assert_eq!(game.fire_at(Point { x: 1, y: 2 }, 1), Ok("You sank all my battleships!"));
 }
