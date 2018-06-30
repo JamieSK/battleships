@@ -92,3 +92,10 @@ fn can_sink_player_twos_battleships() {
     game.fire_at(Point { x: 1, y: 1 }, 1).unwrap();
     assert_eq!(game.fire_at(Point { x: 1, y: 2 }, 1), Ok("You sank all my battleships!"));
 }
+
+#[test]
+fn cannot_play_on_same_cell_twice() {
+    let mut game = Battleships::new();
+    game.fire_at(Point { x: 1, y: 1 }, 1).unwrap();
+    assert_eq!(game.fire_at(Point { x: 1, y: 1 }, 1), Err("You've already fired at that cell."));
+}

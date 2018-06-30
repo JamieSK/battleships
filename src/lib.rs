@@ -15,7 +15,7 @@ pub struct Cell {
     pub hit: bool,
 }
 
-#[derive(Clone, PartialEq, Debug)]
+#[derive(Clone, PartialEq, Debug, Copy)]
 pub struct Point {
     pub x: usize,
     pub y: usize,
@@ -96,23 +96,29 @@ impl Battleships {
             2 => 1,
             _ => panic!(),
         };
-        self.hit_cell(&point, other_player);
         let cell = self.get_cell(point, other_player);
-        match cell.contents {
-            Some(ref ship) => {
-                match self.sunk_ship(ship, other_player) {
-                    true => {
-                        let mut ships_left = self.ships_left(other_player);
-                        *ships_left -= 1;
-                        match *ships_left {
-                            0 => Ok("You sank all my battleships!"),
-                            _ => Ok("You sank my battleship!"),
+
+        match cell.hit {
+            true => Err("You've already fired at that cell."),
+            false => {
+                self.hit_cell(&point, other_player);
+                match cell.contents {
+                    Some(ref ship) => {
+                        match self.sunk_ship(ship, other_player) {
+                            true => {
+                                let mut ships_left = self.ships_left(other_player);
+                                *ships_left -= 1;
+                                match *ships_left {
+                                    0 => Ok("You sank all my battleships!"),
+                                    _ => Ok("You sank my battleship!"),
+                                }
+                            }
+                            false => Ok("Hit!"),
                         }
-                    },
-                    false => Ok("Hit!"),
+                    }
+                    None => Ok("Miss."),
                 }
             }
-            None => Ok("Miss."),
         }
     }
 
