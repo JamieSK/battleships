@@ -66,9 +66,15 @@ impl Battleships {
         }
     }
 
-    pub fn place_ship(&mut self, player: usize, cells: Vec<Point>) {
+    pub fn place_ship(&mut self, player: usize, cells: Vec<Point>) -> Result<&str, &str> {
         match player {
             1 => {
+                for cell in cells.clone() {
+                    match self.player_1.ships_board[cell.x][cell.y].contents {
+                        Some(_) => return Err("There's already a ship there."),
+                        None => {},
+                    }
+                }
                 for cell in cells.clone() {
                     self.player_1.ships_board[cell.x][cell.y] = Cell {
                         contents: Some(Ship { cells: cells.clone() }),
@@ -76,8 +82,15 @@ impl Battleships {
                     }
                 }
                 self.player_1.ships_left += 1;
+                return Ok("Placed ship.");
             }
             2 => {
+                for cell in cells.clone() {
+                    match self.player_2.ships_board[cell.x][cell.y].contents {
+                        Some(_) => return Err("There's already a ship there."),
+                        None => {},
+                    }
+                }
                 for cell in cells.clone() {
                     self.player_2.ships_board[cell.x][cell.y] = Cell {
                         contents: Some(Ship { cells: cells.clone() }),
@@ -85,6 +98,7 @@ impl Battleships {
                     }
                 }
                 self.player_2.ships_left += 1;
+                return Ok("Placed ship.");
             }
             _ => panic!(),
         }
