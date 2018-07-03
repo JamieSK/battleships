@@ -1,6 +1,7 @@
 pub struct Battleships {
     player_1: Board,
     player_2: Board,
+    players_turn: Option<usize>,
 }
 
 struct Board {
@@ -39,6 +40,7 @@ impl Battleships {
                 ships_left: 0,
                 shots_board: vec![vec![Cell { contents: None, hit: false }; 10]; 10],
             },
+            players_turn: None,
         }
     }
 
@@ -105,6 +107,10 @@ impl Battleships {
     }
 
     pub fn fire_at(&mut self, point: Point, player: usize) -> Result<&str, &str> {
+        match self.players_turn {
+            Some(turn) if player != turn => return Err("It's not your turn."),
+            _ => {},
+        }
         let other_player = match player {
             1 => 2,
             2 => 1,
@@ -120,6 +126,7 @@ impl Battleships {
                     Some(ref ship) => {
                         match self.sunk_ship(ship, other_player) {
                             true => {
+                                self.players_turn = Some(other_player);
                                 let mut ships_left = self.ships_left(other_player);
                                 *ships_left -= 1;
                                 match *ships_left {
@@ -127,10 +134,16 @@ impl Battleships {
                                     _ => Ok("You sank my battleship!"),
                                 }
                             }
-                            false => Ok("Hit!"),
+                            false => {
+                                self.players_turn = Some(other_player);
+                                Ok("Hit!")
+                            },
                         }
                     }
-                    None => Ok("Miss."),
+                    None => {
+                        self.players_turn = Some(other_player);
+                        Ok("Miss.")
+                    },
                 }
             }
         }

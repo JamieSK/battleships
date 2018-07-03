@@ -64,6 +64,7 @@ fn return_sank_my_battleship_when_all_of_ship_has_been_hit() {
     game.place_ship(1, vec![Point { x: 1, y: 1 }, Point { x: 1, y: 2 }]).unwrap();
     game.place_ship(1, vec![Point { x: 4, y: 4 }]).unwrap();
     game.fire_at(Point { x: 1, y: 1 }, 2).unwrap();
+    game.fire_at(Point { x: 1, y: 1 }, 1).unwrap();
     assert_eq!(game.fire_at(Point { x: 1, y: 2 }, 2), Ok("You sank my battleship!"));
 }
 
@@ -82,6 +83,7 @@ fn return_sank_all_my_battleships_when_last_one_is_sunk() {
     let mut game = Battleships::new();
     game.place_ship(1, vec![Point { x: 1, y: 1 }, Point { x: 1, y: 2 }]).unwrap();
     game.fire_at(Point { x: 1, y: 1 }, 2).unwrap();
+    game.fire_at(Point { x: 1, y: 1 }, 1).unwrap();
     assert_eq!(game.fire_at(Point { x: 1, y: 2 }, 2), Ok("You sank all my battleships!"));
 }
 
@@ -90,6 +92,7 @@ fn can_sink_player_twos_battleships() {
     let mut game = Battleships::new();
     game.place_ship(2, vec![Point { x: 1, y: 1 }, Point { x: 1, y: 2 }]).unwrap();
     game.fire_at(Point { x: 1, y: 1 }, 1).unwrap();
+    game.fire_at(Point { x: 1, y: 1 }, 2).unwrap();
     assert_eq!(game.fire_at(Point { x: 1, y: 2 }, 1), Ok("You sank all my battleships!"));
 }
 
@@ -97,6 +100,7 @@ fn can_sink_player_twos_battleships() {
 fn cannot_play_on_same_cell_twice() {
     let mut game = Battleships::new();
     game.fire_at(Point { x: 1, y: 1 }, 1).unwrap();
+    game.fire_at(Point { x: 1, y: 1 }, 2).unwrap();
     assert_eq!(game.fire_at(Point { x: 1, y: 1 }, 1), Err("You've already fired at that cell."));
 }
 
@@ -105,4 +109,11 @@ fn cannot_place_ship_where_another_is() {
     let mut game = Battleships::new();
     game.place_ship(1, vec![Point { x: 1, y: 1}]).unwrap();
     assert_eq!(game.place_ship(1, vec![Point { x: 1, y: 1}]), Err("There's already a ship there."));
+}
+
+#[test]
+fn cannot_play_twice_in_a_row_as_the_same_player() {
+    let mut game = Battleships::new();
+    game.fire_at(Point { x: 1, y: 1}, 1).unwrap();
+    assert_eq!(game.fire_at(Point { x: 2, y: 2}, 1), Err("It's not your turn."));
 }
