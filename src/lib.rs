@@ -126,7 +126,6 @@ impl Battleships {
                     Some(ref ship) => {
                         match self.sunk_ship(ship, other_player) {
                             true => {
-                                self.players_turn = Some(other_player);
                                 let mut ships_left = self.ships_left(other_player);
                                 *ships_left -= 1;
                                 match *ships_left {
@@ -135,7 +134,6 @@ impl Battleships {
                                 }
                             }
                             false => {
-                                self.players_turn = Some(other_player);
                                 Ok("Hit!")
                             },
                         }
