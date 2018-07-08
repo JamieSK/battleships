@@ -122,3 +122,9 @@ fn can_play_again_if_you_hit_a_ship() {
     game.fire_at(Point { x: 1, y: 1 }, 2).unwrap();
     assert_eq!(game.fire_at(Point { x: 1, y: 2 }, 2), Ok("Miss."));
 }
+
+#[test]
+fn starts_with_ships_not_placed() {
+    let game = Battleships::new();
+    assert_eq!(game.ships_in_place(1), false);
+}

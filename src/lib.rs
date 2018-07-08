@@ -172,4 +172,8 @@ impl Battleships {
         }
         true
     }
+
+    pub fn ships_in_place(&self, _player: usize) -> bool {
+        false
+    }
 }
