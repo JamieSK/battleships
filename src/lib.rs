@@ -114,6 +114,9 @@ impl Battleships {
     }
 
     pub fn fire_at(&mut self, point: Point, player: usize) -> Result<&str, &str> {
+        if !(self.ships_in_place(1) && self.ships_in_place(2)) {
+            return Err("Not all ships have been placed.")
+        }
         match self.players_turn {
             Some(turn) if player != turn => return Err("It's not your turn."),
             _ => {},
