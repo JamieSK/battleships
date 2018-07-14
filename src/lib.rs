@@ -180,10 +180,16 @@ impl Battleships {
         true
     }
 
-    pub fn ships_in_place(&self, player: usize) -> bool {
+    pub fn ships_in_place(&mut self, player: usize) -> bool {
         match player {
-            1 => self.player_1.ships_placed == self.all_ships,
-            2 => self.player_2.ships_placed == self.all_ships,
+            1 => {
+                self.player_1.ships_placed.sort_unstable();
+                self.player_1.ships_placed == self.all_ships
+            },
+            2 => {
+                self.player_2.ships_placed.sort_unstable();
+                self.player_2.ships_placed == self.all_ships
+            },
             _ => panic!(),
         }
     }
