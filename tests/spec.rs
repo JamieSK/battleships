@@ -128,3 +128,14 @@ fn starts_with_ships_not_placed() {
     let game = Battleships::new();
     assert_eq!(game.ships_in_place(1), false);
 }
+
+#[test]
+fn returns_true_once_all_ships_are_positioned() {
+    let mut game = Battleships::new();
+    game.place_ship(1, vec![Point { x: 1, y: 1 }]).unwrap();
+    game.place_ship(1, vec![Point { x: 2, y: 1 }, Point { x: 2, y: 2 }]).unwrap();
+    game.place_ship(1, vec![Point { x: 3, y: 1 }, Point { x: 3, y: 2 }, Point { x: 3, y: 3 }]).unwrap();
+    game.place_ship(1, vec![Point { x: 4, y: 1 }, Point { x: 4, y: 2 }, Point { x: 4, y: 3 }, Point { x: 4, y: 4 }]).unwrap();
+    game.place_ship(1, vec![Point { x: 5, y: 1 }, Point { x: 5, y: 2 }, Point { x: 5, y: 3 }, Point { x: 5, y: 4 }, Point { x: 5, y: 5 }]).unwrap();
+    assert_eq!(game.ships_in_place(1), true);
+}

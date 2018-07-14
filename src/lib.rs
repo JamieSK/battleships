@@ -2,11 +2,13 @@ pub struct Battleships {
     player_1: Board,
     player_2: Board,
     players_turn: Option<usize>,
+    all_ships: Vec<usize>,
 }
 
 struct Board {
     ships_board: Vec<Vec<Cell>>,
     ships_left: u8,
+    ships_placed: Vec<usize>,
     shots_board: Vec<Vec<Cell>>,
 }
 
@@ -33,14 +35,17 @@ impl Battleships {
             player_1: Board {
                 ships_board: vec![vec![Cell { contents: None, hit: false }; 10]; 10],
                 ships_left: 0,
+                ships_placed: vec![],
                 shots_board: vec![vec![Cell { contents: None, hit: false }; 10]; 10],
             },
             player_2: Board {
                 ships_board: vec![vec![Cell { contents: None, hit: false }; 10]; 10],
                 ships_left: 0,
+                ships_placed: vec![],
                 shots_board: vec![vec![Cell { contents: None, hit: false }; 10]; 10],
             },
             players_turn: None,
+            all_ships: vec![1, 2, 3, 4, 5],
         }
     }
 
@@ -84,6 +89,7 @@ impl Battleships {
                     }
                 }
                 self.player_1.ships_left += 1;
+                self.player_1.ships_placed.push(cells.len());
                 return Ok("Placed ship.");
             }
             2 => {
@@ -100,6 +106,7 @@ impl Battleships {
                     }
                 }
                 self.player_2.ships_left += 1;
+                self.player_2.ships_placed.push(cells.len());
                 return Ok("Placed ship.");
             }
             _ => panic!(),
@@ -173,7 +180,11 @@ impl Battleships {
         true
     }
 
-    pub fn ships_in_place(&self, _player: usize) -> bool {
-        false
+    pub fn ships_in_place(&self, player: usize) -> bool {
+        match player {
+            1 => self.player_1.ships_placed == self.all_ships,
+            2 => self.player_2.ships_placed == self.all_ships,
+            _ => panic!(),
+        }
     }
 }
